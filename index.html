@@ -4,15 +4,19 @@ if (!isset($_SESSION['angka_acak'])) {
     $_SESSION['angka_acak'] = rand(1, 100);
     $_SESSION['sisa_tebakan'] = 5;
     $_SESSION['pesan'] = "Silakan tebak angka antara 1-100!";
+    $_SESSION['selesai'] = false;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tebakan'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tebakan']) && !$_SESSION['selesai']) {
     $tebakan = $_POST['tebakan'];
     $_SESSION['sisa_tebakan']--;
 
-    if ($tebakan > $_SESSION['angka_acak']) {
+    if ($tebakan == $_SESSION['angka_acak']) {
+        $_SESSION['pesan'] = "🎉 BENAR! Angkanya adalah ".$_SESSION['angka_acak']."! Kamu Menang! 🎊";
+        $_SESSION['selesai'] = true;
+    } elseif ($tebakan > $_SESSION['angka_acak']) {
         $_SESSION['pesan'] = "⬇️ Terlalu besar! Sisa: ".$_SESSION['sisa_tebakan']." kali lagi";
-    } elseif ($tebakan < $_SESSION['angka_acak']) {
+    } else {
         $_SESSION['pesan'] = "⬆️ Terlalu kecil! Sisa: ".$_SESSION['sisa_tebakan']." kali lagi";
     }
 }
@@ -25,15 +29,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tebakan'])) {
 </head>
 <body>
     <h1>🎮 Game Tebak Angka</h1>
-    <div style="font-size: 20px; margin: 20px 0;">
+    <div style="font-size: 22px; margin: 25px 0; color: #2c3e50;">
         <strong><?=$_SESSION['pesan']?></strong>
     </div>
-    <p>🎯 Sisa percobaan: <span style="color: red; font-weight: bold;"><?=$_SESSION['sisa_tebakan']?></span></p>
+    <p>🎯 Sisa percobaan: <span style="color: red; font-weight: bold; font-size: 18px;"><?=$_SESSION['sisa_tebakan']?></span></p>
     
+    <?php if (!$_SESSION['selesai']): ?>
     <form method="post">
-        <input type="number" name="tebakan" min="1" max="100" placeholder="Masukkan angka..." required>
+        <input type="number" name="tebakan" min="1" max="100" placeholder="1 - 100" required>
         <br><br>
-        <button type="submit" style="padding: 8px 20px; font-size: 16px;">Cek!</button>
+        <button type="submit" style="padding: 10px 25px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 5px;">Cek Tebakan</button>
     </form>
+    <?php else: ?>
+    <p style="color: green; font-size: 20px;">✅ Permainan selesai!</p>
+    <?php endif; ?>
 </body>
 </html>
