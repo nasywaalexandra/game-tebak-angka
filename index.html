@@ -1,9 +1,21 @@
 <?php
 session_start();
-// Buat angka acak dan batas tebakan jika belum ada
 if (!isset($_SESSION['angka_acak'])) {
     $_SESSION['angka_acak'] = rand(1, 100);
     $_SESSION['sisa_tebakan'] = 5;
+    $_SESSION['pesan'] = "Silakan tebak angka!";
+}
+
+// Proses tebakan
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tebakan'])) {
+    $tebakan = $_POST['tebakan'];
+    $_SESSION['sisa_tebakan']--;
+
+    if ($tebakan > $_SESSION['angka_acak']) {
+        $_SESSION['pesan'] = "⬇️ Angka terlalu besar!";
+    } elseif ($tebakan < $_SESSION['angka_acak']) {
+        $_SESSION['pesan'] = "⬆️ Angka terlalu kecil!";
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -14,7 +26,8 @@ if (!isset($_SESSION['angka_acak'])) {
 </head>
 <body>
     <h1>🎮 Game Tebak Angka</h1>
-    <p>Tebak angka antara 1 sampai 100 (Kesempatan: <?=$_SESSION['sisa_tebakan']?> kali)</p>
+    <p><strong><?=$_SESSION['pesan']?></strong></p>
+    <p>Sisa kesempatan: <?=$_SESSION['sisa_tebakan']?> kali</p>
     
     <form method="post">
         <input type="number" name="tebakan" min="1" max="100" required>
