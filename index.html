@@ -3,18 +3,17 @@ session_start();
 if (!isset($_SESSION['angka_acak'])) {
     $_SESSION['angka_acak'] = rand(1, 100);
     $_SESSION['sisa_tebakan'] = 5;
-    $_SESSION['pesan'] = "Silakan tebak angka!";
+    $_SESSION['pesan'] = "Silakan tebak angka antara 1-100!";
 }
 
-// Proses tebakan
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tebakan'])) {
     $tebakan = $_POST['tebakan'];
     $_SESSION['sisa_tebakan']--;
 
     if ($tebakan > $_SESSION['angka_acak']) {
-        $_SESSION['pesan'] = "⬇️ Angka terlalu besar!";
+        $_SESSION['pesan'] = "⬇️ Terlalu besar! Sisa: ".$_SESSION['sisa_tebakan']." kali lagi";
     } elseif ($tebakan < $_SESSION['angka_acak']) {
-        $_SESSION['pesan'] = "⬆️ Angka terlalu kecil!";
+        $_SESSION['pesan'] = "⬆️ Terlalu kecil! Sisa: ".$_SESSION['sisa_tebakan']." kali lagi";
     }
 }
 ?>
@@ -26,13 +25,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tebakan'])) {
 </head>
 <body>
     <h1>🎮 Game Tebak Angka</h1>
-    <p><strong><?=$_SESSION['pesan']?></strong></p>
-    <p>Sisa kesempatan: <?=$_SESSION['sisa_tebakan']?> kali</p>
+    <div style="font-size: 20px; margin: 20px 0;">
+        <strong><?=$_SESSION['pesan']?></strong>
+    </div>
+    <p>🎯 Sisa percobaan: <span style="color: red; font-weight: bold;"><?=$_SESSION['sisa_tebakan']?></span></p>
     
     <form method="post">
-        <input type="number" name="tebakan" min="1" max="100" required>
+        <input type="number" name="tebakan" min="1" max="100" placeholder="Masukkan angka..." required>
         <br><br>
-        <button type="submit">Cek Tebakan</button>
+        <button type="submit" style="padding: 8px 20px; font-size: 16px;">Cek!</button>
     </form>
 </body>
 </html>
