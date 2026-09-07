@@ -1,5 +1,13 @@
 <?php
 session_start();
+
+// Fungsi reset game
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ulang'])) {
+    session_destroy();
+    header("Location: index.php");
+    exit;
+}
+
 if (!isset($_SESSION['angka_acak'])) {
     $_SESSION['angka_acak'] = rand(1, 100);
     $_SESSION['sisa_tebakan'] = 5;
@@ -43,8 +51,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tebakan']) && !$_SESSI
         <br><br>
         <button type="submit" style="padding: 10px 25px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 5px;">Cek Tebakan</button>
     </form>
-    <?php else: ?>
-    <p style="color: #e74c3c; font-size: 20px;">✅ Permainan selesai!</p>
     <?php endif; ?>
+
+    <!-- Tombol Main Ulang -->
+    <form method="post">
+        <button type="submit" name="ulang" style="padding: 10px 25px; font-size: 18px; background: #3498db; color: white; border: none; border-radius: 5px; margin-top: 15px;">🔄 Main Ulang</button>
+    </form>
 </body>
 </html>
