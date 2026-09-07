@@ -14,6 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tebakan']) && !$_SESSI
     if ($tebakan == $_SESSION['angka_acak']) {
         $_SESSION['pesan'] = "🎉 BENAR! Angkanya adalah ".$_SESSION['angka_acak']."! Kamu Menang! 🎊";
         $_SESSION['selesai'] = true;
+    } elseif ($_SESSION['sisa_tebakan'] <= 0) {
+        $_SESSION['pesan'] = "😞 KALAH! Kesempatan habis! Jawabannya adalah: ".$_SESSION['angka_acak'];
+        $_SESSION['selesai'] = true;
     } elseif ($tebakan > $_SESSION['angka_acak']) {
         $_SESSION['pesan'] = "⬇️ Terlalu besar! Sisa: ".$_SESSION['sisa_tebakan']." kali lagi";
     } else {
@@ -41,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tebakan']) && !$_SESSI
         <button type="submit" style="padding: 10px 25px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 5px;">Cek Tebakan</button>
     </form>
     <?php else: ?>
-    <p style="color: green; font-size: 20px;">✅ Permainan selesai!</p>
+    <p style="color: #e74c3c; font-size: 20px;">✅ Permainan selesai!</p>
     <?php endif; ?>
 </body>
 </html>
