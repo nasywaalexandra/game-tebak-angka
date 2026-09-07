@@ -1,20 +1,22 @@
 <?php
 session_start();
 
-// Fungsi reset game
+// Reset game
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ulang'])) {
     session_destroy();
     header("Location: index.php");
     exit;
 }
 
+// Inisialisasi game baru
 if (!isset($_SESSION['angka_acak'])) {
     $_SESSION['angka_acak'] = rand(1, 100);
     $_SESSION['sisa_tebakan'] = 5;
-    $_SESSION['pesan'] = "Silakan tebak angka antara 1-100!";
+    $_SESSION['pesan'] = "Silakan tebak angka antara 1 sampai 100!";
     $_SESSION['selesai'] = false;
 }
 
+// Proses tebakan
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tebakan']) && !$_SESSION['selesai']) {
     $tebakan = $_POST['tebakan'];
     $_SESSION['sisa_tebakan']--;
@@ -37,25 +39,116 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tebakan']) && !$_SESSI
 <head>
     <title>Game Tebak Angka</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+        .pesan {
+            font-size: 20px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        .sisa {
+            font-size: 18px;
+            margin: 15px 0;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .sisa span {
+            font-size: 26px;
+            color: #c0392b;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            font-size: 22px;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        input:focus {
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+        .btn-cek {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            color: white;
+            margin-bottom: 12px;
+        }
+        .btn-ulang {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <h1>🎮 Game Tebak Angka</h1>
-    <div style="font-size: 22px; margin: 25px 0; color: #2c3e50;">
-        <strong><?=$_SESSION['pesan']?></strong>
-    </div>
-    <p>🎯 Sisa percobaan: <span style="color: red; font-weight: bold; font-size: 18px;"><?=$_SESSION['sisa_tebakan']?></span></p>
-    
-    <?php if (!$_SESSION['selesai']): ?>
-    <form method="post">
-        <input type="number" name="tebakan" min="1" max="100" placeholder="1 - 100" required>
-        <br><br>
-        <button type="submit" style="padding: 10px 25px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 5px;">Cek Tebakan</button>
-    </form>
-    <?php endif; ?>
+    <div class="container">
+        <h1>🎮 Game Tebak Angka</h1>
+        
+        <div class="pesan">
+            <strong><?=$_SESSION['pesan']?></strong>
+        </div>
+        
+        <div class="sisa">
+            Sisa percobaan: <span><?=$_SESSION['sisa_tebakan']?></span>
+        </div>
 
-    <!-- Tombol Main Ulang -->
-    <form method="post">
-        <button type="submit" name="ulang" style="padding: 10px 25px; font-size: 18px; background: #3498db; color: white; border: none; border-radius: 5px; margin-top: 15px;">🔄 Main Ulang</button>
-    </form>
+        <?php if (!$_SESSION['selesai']): ?>
+        <form method="post">
+            <input type="number" name="tebakan" min="1" max="100" placeholder="1 - 100" required>
+            <button type="submit" class="btn-cek">✅ Cek Tebakan</button>
+        </form>
+        <?php endif; ?>
+
+        <form method="post">
+            <button type="submit" name="ulang" class="btn-ulang">🔄 Main Ulang</button>
+        </form>
+    </div>
 </body>
 </html>
